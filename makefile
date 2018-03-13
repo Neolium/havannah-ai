@@ -8,7 +8,5 @@ projet.o: projet.cpp
 main.o: main.cpp
 	g++ -c main.cpp projet.h
 
-
 clean : 
 	rm -f *.o
- 
