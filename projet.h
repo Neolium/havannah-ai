@@ -88,6 +88,9 @@ class start
 	Move minimax(char **plateau);
 	// retourn la meilleur case a jouer via l'algorithme Minimax
 
+	Move monte_carlo(char **plateau);
+	// retourn la meilleur case a jouer via l'algorithme MonteCarlo
+
 	int minSearch(char **plateau);
 	// pour trouver le prochain case jouer par Computer (AI) et elle retourn le dernier score possible
 

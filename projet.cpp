@@ -874,32 +874,79 @@ void start::play()
 		else
 		{
 
-			cout << endl
-				 << "Computer Player Move:" << endl;
-			Move AImove = minimax(plateau);
-			// if(GameBorder(AImove.x,AImove.y)){
-			cout << "tester mini: " << test_mini << endl;
-			cout << "tester max : " << test_Max << endl;
-			cout << "tester min : " << test_Min << endl;
-			test_Max = 0;
-			test_Min = 0;
-			test_mini = 0;
+			cout << endl << "Computer Player Move:" << endl;
+			
+			Move AImove = monte_carlo(plateau);
+
 			plateau[AImove.x][AImove.y] = '0';
+
 			if (CheckWin(2, AImove.x, AImove.y))
 			{
 				AfficherPlateau();
+
 				cout << " \nComputer Player Wins" << endl;
 
 				break;
 			}
+
 			turn++;
+
 			AfficherPlateau();
 		}
-		//} //gem bor
 	}
 }
 
 //-------------------------------------------------
+
+Move start::monte_carlo(char **plateau) {
+	cout << "MonteCarlo" << endl;
+
+	int wins = 0;
+	bool AIWins = false;
+	int probability = 0;
+	int simulations = 100;
+	Move move;
+
+	// Selecting all free nodes, we'll play a simulation for each (MC is depth 1)
+	for (int i = 1; i < size * 2; i++) {
+		for (int j = 1; j < size * 4 - 2; j++) {
+
+			// If the node is free to play
+			if (plateau[i][j] == '*') {
+
+				// TODO: Add plateau fork
+				// 1 - Fork the plateau
+				// 2 - Set the current node as AI move
+
+				wins = 0; // Count the number of wins in the simulations
+
+				// Do the simulations on this node:
+				for (int k = 0; k < simulations; k++) {
+
+					// We'll Simulate the game
+					while(!AIWins && !CheckWin(1)) {
+
+						// TODO: Add random moves generation
+						// 1 - Random other player (OP) move
+						// 2 - Random AI player move
+						
+						AIWins = CheckWin(0);
+					}
+
+					if(AIWins) wins++; // If AI wins, we increment the wins counter
+				}
+
+				// If simulations offer a better probability, we'll select the current node as a move
+				if((wins / simulations) > probability) {
+					move.x = i;
+					move.y = j;
+				}
+			}
+		}
+	}
+
+	return move;
+}
 
 Move start::minimax(char **plateau)
 {
@@ -945,12 +992,7 @@ Move start::minimax(char **plateau)
 					bestMove.x = i;
 					bestMove.y = j;
 				}
-				//break;
-				/*				cout<<"plateau["<<i<<"]["<<j<<"]"<<" a eté tester "<<endl;
-				cout<<"bridge array mimimax :"<<endl;
-		for(int l=0;l<bridge_array_minimax.size();l++){cout<<" - "<<bridge_array_minimax[l];}
-	for(int l=0;l<bridge_array_minimax.size();l++){cout<<" - "<<plateau[bridge_array_minimax[l]/100][bridge_array_minimax[l]%100];}
-*/
+
 				bridge_array_minimax.clear();
 				fork_array_minimax.clear();
 
@@ -1163,30 +1205,6 @@ bool start::Gameover_minimax()
 	return !emptySpace;
 }
 
-/*
-bool start :: CheckWin_minimax(int Player,int Lig,int Col){
-	
-	if(Case_De_Trois_Frere(Lig,Col)){
-			bridge_array_minimax.push_back(Lig*100+Col);
-					}
-	Bridge_minimax(Player);	 // test of Bridge
-	
-	if(Case_De_Quatre_Frere(Lig,Col)){
-		fork_array_minimax.push_back(Lig*100+Col);					
-					}
-	Fork_minimax(Player); // test of Fork
-	
-	
-		
-	if(CaseJouer_minimax==CaseDeJeux_minimax){
-				return true;   }
-	else{ return false;} 
-
-
-	};
-
-*/
-
 //###################################################################################//
 void start::Bridge_minimax(int player)
 {
@@ -1274,65 +1292,3 @@ void start::Fork_minimax(int player)
 	} // end for1
 	  //***************** END OF FORK TEST *************
 }
-
-//-------------------------------------------------
-
-/*
-
-
-
-bool  start:: CheckWin(int player,int Lig,int Col){
-
-	if(Case_De_Trois_Frere(Lig,Col)){
-			bridge_array.push_back(Lig*100+Col);
-					}
-	Bridge(player);	 // test of Bridge
-	
-	if(Case_De_Quatre_Frere(Lig,Col)){
-		fork_array.push_back(Lig*100+Col);					
-					}
-	Fork(player); // test of Fork
-	
-	ring_array.push_back(Lig*100+Col);
-						
-	Ring(Lig,Col,player); // test of Ring
-
-		
-	if(CaseJouer==CaseDeJeux){
-				return true;   }
-	else{ return false;} 
-
-	}
-
-
-
-
-
-
-
-char tmp;
-
-if(Case_De_Trois_Frere(Lig,Col)){tmp='b';}
-	
-if(Case_De_Quatre_Frere(Lig,Col)){tmp='f';}
-
-
-if(tmp=='b'){int k=0;
-	for(int i=0;i<bridge_array.size();i++){  k++; }
-			bridge_array.erase( begin() + k); }
-else if(tmp=='f'){int k=0;
-	for(int i=0;i<fork_array.size();i++){  k++; }
-			fork_array.erase( begin() + k); }
-
-
-
-
-
-
-
-// lig=size*2;
-// col=size*4-2;
-// i=1 i<lig-1
-// k=1, col-1
-
-*/
